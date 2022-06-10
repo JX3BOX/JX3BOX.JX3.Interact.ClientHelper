@@ -23,6 +23,32 @@ namespace JX3BOX.JX3.Interact.ClientHelper
             { ClientType.classic_exp, new InstallInfo("JX3_CLASSIC_EXP", "classic_exp")},
         };
 
+        public static readonly string XLauncherV2SubReg = "SeasunGame";
+
+        public static List<ClientInfo> GetLocalClients()
+        {
+            List<ClientInfo> ret = new List<ClientInfo>();
+            foreach (KeyValuePair<ClientType, InstallInfo> client in InstallInfos)
+            {
+                try
+                {
+                    ClientInfo info = new ClientInfo()
+                    {
+                        Type = client.Key,
+                        InstallPath = GetInstallPath(client.Key),
+                        BinaryPath = GetBinaryPath(client.Key),
+                        Version = GetClientVersion(client.Key),
+                        UserdataPath = GetUserdataPath(client.Key),
+                        WorkingDirectory = GetWorkingDirectory(client.Key),
+                    };
+                    ret.Add(info);
+                }
+                catch (Exception)
+                { }
+            }
+            return ret;
+        }
+
         /// <summary>
         /// 获取注册表内安装路径
         /// </summary>
@@ -31,9 +57,20 @@ namespace JX3BOX.JX3.Interact.ClientHelper
         /// <exception cref="DirectoryNotFoundException">路径无法找到或无效</exception>
         public static string GetInstallPath(ClientType type)
         {
-            string path = RegisteryReader.GetLocalMachineRegistData(
-                $@"{InstallInfos[type].RegParent}\{InstallInfos[type].RegName}",
-                "InstallPath", "").ToString();
+            string path;
+            if (string.IsNullOrWhiteSpace(
+                path = RegisteryReader.GetLocalMachineRegistData(
+                    $@"{InstallInfos[type].RegParent}\{XLauncherV2SubReg}\{InstallInfos[type].RegName}", // 优先读取 XLauncherV2 即新启动器
+                    "InstallPath",
+                    ""
+                    ).ToString()))
+            {
+                path = RegisteryReader.GetLocalMachineRegistData(
+                    $@"{InstallInfos[type].RegParent}\{InstallInfos[type].RegName}",
+                    "InstallPath",
+                    ""
+                    ).ToString();
+            }
             if (!Directory.Exists(path))
             {
                 throw new DirectoryNotFoundException("无法找到对应客户端，请检查客户端安装");
@@ -50,9 +87,20 @@ namespace JX3BOX.JX3.Interact.ClientHelper
         /// <exception cref="FormatException">版本格式无效</exception>
         public static Version GetClientVersion(ClientType type)
         {
-            string verStr = RegisteryReader.GetLocalMachineRegistData(
-                $@"{InstallInfos[type].RegParent}\{InstallInfos[type].RegName}",
-                "Version", "").ToString();
+            string verStr;
+            if (string.IsNullOrWhiteSpace(
+                verStr = RegisteryReader.GetLocalMachineRegistData(
+                    $@"{InstallInfos[type].RegParent}\{XLauncherV2SubReg}\{InstallInfos[type].RegName}", // 优先读取 XLauncherV2 即新启动器
+                    "Version",
+                    ""
+                    ).ToString()))
+            {
+                verStr = RegisteryReader.GetLocalMachineRegistData(
+                    $@"{InstallInfos[type].RegParent}\{InstallInfos[type].RegName}",
+                    "Version",
+                    ""
+                    ).ToString();
+            }
             if (!Version.TryParse(verStr, out Version version))
             {
                 throw new FormatException("无法从注册表读取对应游戏版本");
