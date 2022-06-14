@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32;
 
-namespace JX3BOX.JX3.Interact.ClientHelper
+namespace JX3BOX.JX3.Interact.ClientHelper.Utils
 {
-    public class RegisteryReader
+    public static class RegisteryReader
     {
         /// <summary>
         /// 从注册表HKLM中读取指定的注册表键的值

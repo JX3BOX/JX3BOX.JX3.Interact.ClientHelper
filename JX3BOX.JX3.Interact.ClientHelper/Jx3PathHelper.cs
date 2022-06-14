@@ -1,5 +1,6 @@
 ﻿using JX3BOX.JX3.Interact.ClientHelper.Enums;
 using JX3BOX.JX3.Interact.ClientHelper.Models;
+using JX3BOX.JX3.Interact.ClientHelper.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
