@@ -80,13 +80,36 @@ namespace JX3BOX.JX3.Interact.ClientHelper
         }
 
         /// <summary>
+        /// 通过客户端类型获取本地客户端版本
+        /// </summary>
+        /// <param name="type">客户端分支类型</param>
+        /// <returns>客户端版本</returns>
+        /// <exception cref="FormatException">无法获取版本或版本无效</exception>
+        public static Version GetClientVersion(ClientType type) => GetClientVersion(GetWorkingDirectory(type));
+
+        /// <summary>
+        /// 通过客户端工作路径获取客户端版本
+        /// </summary>
+        /// <param name="clientWorkDir">客户端工作路径</param>
+        /// <returns>客户端版本</returns>
+        /// <exception cref="FormatException">无法获取版本或版本无效</exception>
+        public static Version GetClientVersion(string clientWorkDir)
+        {
+            var verStr = IniReader.GetString("Version", "Sword3.version", "0-0-0-0", Path.Combine(clientWorkDir, "version.cfg"), 16);
+            var ver = Version.Parse(verStr.Replace("-", "."));
+            if(ver == Version.Parse("0.0.0.0"))
+                throw new FormatException("客户端版本号无效");
+            return ver;
+        }
+
+        /// <summary>
         /// 获取注册表内记录的客户端版本
         /// 其值将在启动器更新完游戏提示“客户端已是最新版本，无需更新”时刷新
         /// </summary>
         /// <param name="type">游戏版本分支</param>
         /// <returns>客户端版本</returns>
         /// <exception cref="FormatException">版本格式无效</exception>
-        public static Version GetClientVersion(ClientType type)
+        public static Version GetClientVersionFromRegistery(ClientType type)
         {
             string verStr;
             if (string.IsNullOrWhiteSpace(
