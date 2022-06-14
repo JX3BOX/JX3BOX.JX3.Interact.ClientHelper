@@ -18,8 +18,8 @@ namespace JX3BOX.JX3.Interact.ClientHelper.Utils
         /// <param name="key">键名</param>
         /// <param name="def">没有找到时返回的默认值</param>
         /// <param name="filename">ini 文件路径</param>
-        /// <returns></returns>
-        public static string getString(string section, string key, string def, string filename, int size = 127)
+        /// <returns>若获取到则返回获取到的值，否则返回默认值</returns>
+        public static string GetString(string section, string key, string def, string filename, int size = 127)
         {
             StringBuilder sb = new StringBuilder(size);
             GetPrivateProfileString(section, key, def, sb, sb.Capacity, Path.GetFullPath(filename));
