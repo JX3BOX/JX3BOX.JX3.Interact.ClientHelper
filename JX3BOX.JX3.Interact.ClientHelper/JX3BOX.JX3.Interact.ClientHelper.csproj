@@ -18,9 +18,8 @@
     <PackageTags>jx3; jx3box</PackageTags>
     <AssemblyOriginatorKeyFile>..\ClientHelper.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
-    <Version>1.1.0</Version>
-    <PackageReleaseNotes>增加 XLauncherV2（新启动器）支持
-增加获取本地客户端列表</PackageReleaseNotes>
+    <Version>1.2.0</Version>
+    <PackageReleaseNotes>调整命名空间；优化版本获取逻辑以适配 XLauncherV2</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
