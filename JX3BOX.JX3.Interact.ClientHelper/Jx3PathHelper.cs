@@ -19,7 +19,7 @@ namespace JX3BOX.JX3.Interact.ClientHelper
         {
             { ClientType.zhcn_hd, new InstallInfo("JX3", "zhcn_hd")},
             { ClientType.zhcn_exp, new InstallInfo("JX3_EXP", "zhcn_exp")},
-            { ClientType.zhcn_tw, new InstallInfo("zhcn_tw","zhcn_tw"){ RegParent = @"SOFTWARE\WOW6432Node\kingsoft\JX3"}},
+            { ClientType.zhcn_tw, new InstallInfo("zhcn_tw","zhcn_tw") { RegParent = @"SOFTWARE\WOW6432Node\kingsoft\JX3"}},
             { ClientType.classic_yq, new InstallInfo("JX3_CLASSIC", "classic_yq")},
             { ClientType.classic_exp, new InstallInfo("JX3_CLASSIC_EXP", "classic_exp")},
         };
@@ -152,17 +152,12 @@ namespace JX3BOX.JX3.Interact.ClientHelper
         /// 从分支信息获取用户数据目录
         /// </summary>
         /// <param name="type">游戏版本分支</param>
-        /// <returns>用户数据目录</returns>
-        /// <exception cref="DirectoryNotFoundException">用户数据目录无法找到或无效</exception>
+        /// <returns>用户数据目录，不存在则返回 null</returns>
         public static string GetUserdataPath(ClientType type)
         {
             InstallInfo info = InstallInfos[type];
             string userdataPath = Path.Combine(GetInstallPath(type), info.InstallParent, info.InstallName, info.UserdataFolderPath);
-            if (!Directory.Exists(userdataPath))
-            {
-                throw new DirectoryNotFoundException("无法找到用户数据目录，请检查客户端安装");
-            }
-            return userdataPath;
+            return Directory.Exists(userdataPath) ? userdataPath : null;
         }
 
         /// <summary>
@@ -187,7 +182,7 @@ namespace JX3BOX.JX3.Interact.ClientHelper
         /// </summary>
         /// <param name="type">游戏版本分支</param>
         /// <returns>XLauncher路径</returns>
-        /// <exception cref="FileNotFoundException">工作路径无法找到或无效</exception>
+        /// <exception cref="FileNotFoundException">可执行路径无法找到或无效</exception>
         public static string GetXLauncherPath(ClientType type)
         {
             string path = Directory.GetParent(GetInstallPath(type)).Parent.Parent.FullName;
